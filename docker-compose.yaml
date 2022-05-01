@@ -1,0 +1,22 @@
+version: "3.5"
+
+services:
+  postgre:
+    image: "postgres:alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-passwd
+    volumes:
+      - type: volume
+        source: db-data
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./DB/database-container-config/init_database_scripts
+        target: /docker-entrypoint-initdb.d
+      - type: bind
+        source: ./DB/database-container-config/secrets
+        target: /run/secrets
+
+volumes:
+  db-data:
